@@ -9,7 +9,7 @@ import java.util.Stack;
  *  @version 1/12/15 13:03:48
  */
 
-public class Arith 
+class Arith 
 {
 	// I  have explained my reasoning why I believe my methods are optimal in the each of the respective methods. Please note that most methods
 	// are very similar and as such the explanations are mostly the same.
@@ -55,11 +55,7 @@ public class Arith
 			{
 				count--;
 			}
-			if(i != (prefixLiterals.length-1) && (count == 0))
-			{
-				return false;
-			}
-			else if(count < 0)
+			if(i != (prefixLiterals.length-1) && (count <= 0))
 			{
 				return false;
 			}
@@ -116,7 +112,7 @@ public class Arith
 				{
 					result = popTwo * popOne;
 				}
-				else if(postfixLiterals[i].equals("/"))
+				if(postfixLiterals[i].equals("/"))
 				{
 					result = popTwo / popOne;
 				}
@@ -180,7 +176,7 @@ public class Arith
 				{
 					result = popOne * popTwo;
 				}
-				else if(prefixLiterals[i].equals("/"))
+				if(prefixLiterals[i].equals("/"))
 				{
 					result = popOne / popTwo;
 				}
@@ -233,7 +229,7 @@ public class Arith
 				{
 					result = popTwo * popOne;
 				}
-				else if(postfixLiterals[i].equals("/"))
+				if(postfixLiterals[i].equals("/"))
 				{
 					result = popTwo / popOne;
 				}

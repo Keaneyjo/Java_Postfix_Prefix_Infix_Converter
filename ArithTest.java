@@ -1,3 +1,4 @@
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -6,6 +7,11 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class ArithTest {
 
+	@Test	  	
+     	public void testArith()	  	
+     	{	  	
+       		new Arith();	  	
+     	}
 	@Test
 	public void validatePrefixOrderTest() {
 		String [] arr = {};
@@ -14,6 +20,13 @@ public class ArithTest {
 		assertEquals("validatePrefixOrderTest; Correct Case", Arith.validatePrefixOrder(arr), true);
 		arr[6] = "+"; // {"+", "+", "A", "*", "B", "C", "+"};
 		assertEquals("validatePrefixOrderTest; Correct Case", Arith.validatePrefixOrder(arr), false);
+		arr = new String [] { "+", "+", "-", "4", "4", "2", "*", "/", "6", "3", "2" }; // + + - 4 4 2 * / 6 3 2 = 6
+		assertEquals("evaluatePrefixOrder; Correct Case", Arith.validatePrefixOrder(arr), true);
+		arr = new String [] { "+", "3", "4", "3" }; // + + - 4 4 2 * / 6 3 2 = 6
+		assertEquals("evaluatePrefixOrder; Correct Case", Arith.validatePrefixOrder(arr), false);
+		arr = new String [] { "3", "3", "-", "3" }; // + + - 4 4 2 * / 6 3 2 = 6
+		assertEquals("evaluatePrefixOrder; Correct Case", Arith.validatePrefixOrder(arr), false);
+		
 	}
 	
 	@Test
@@ -24,6 +37,8 @@ public class ArithTest {
 		assertEquals("validatePostfixOrder; Correct Case", Arith.validatePostfixOrder(arr), true);
 		arr[6] = "6"; // {"+", "+", "A", "*", "B", "C", "+"};
 		assertEquals("validatePostfixOrder; Correct Case", Arith.validatePostfixOrder(arr), false);
+		arr = new String [] { "5", "5", "/", "10", "2", "-", "*" }; // 5 5 / 10 2 - * = 8
+		assertEquals("evaluatePrefixOrder; Divide Case", Arith.validatePostfixOrder(arr), true);
 	}
 	
 	@Test
@@ -34,6 +49,8 @@ public class ArithTest {
 		assertEquals("evaluatePrefixOrder; Correct Case", Arith.evaluatePrefixOrder(arr), 2);
 		arr = new String [] { "-", "+", "7", "*", "4", "5", "+", "2", "0" };
 		assertEquals("evaluatePrefixOrder; Correct Case", Arith.evaluatePrefixOrder(arr), 25);
+		arr = new String [] { "+", "+", "-", "4", "4", "2", "*", "/", "6", "3", "2" }; // + + - 4 4 2 * / 6 3 2 = 6
+		assertEquals("evaluatePrefixOrder; Correct Case", Arith.evaluatePrefixOrder(arr), 6);
 	}
 	
 	@Test
@@ -42,6 +59,9 @@ public class ArithTest {
 		assertEquals("evaluatePrefixOrder; Empty Case", Arith.evaluatePostfixOrder(arr), 0);
 		arr = new String [] { "4", "55", "+", "62", "23", "-", "*" };
 		assertEquals("evaluatePrefixOrder; Correct Case", Arith.evaluatePostfixOrder(arr), 2301);
+		arr = new String [] { "5", "5", "/", "10", "2", "-", "*" }; // 5 5 / 10 2 - * = 8
+		assertEquals("evaluatePrefixOrder; Divide Case", Arith.evaluatePostfixOrder(arr), 8);
+		
 	}
 	
 	@Test
@@ -49,13 +69,14 @@ public class ArithTest {
 		String [] arr = {};
 		assertEquals("convertPrefixToPostfix; Empty Case", Arith.convertPrefixToPostfix(arr).toString(), arr.toString());
 		arr = new String [] { "*", "-", "A", "/", "B", "C", "-", "/", "A", "K", "L" };
-		String test = "";
+		String [] test = new String [] { "A", "B", "C", "/", "-", "A", "K", "/", "L", "-", "*" };
 		arr = Arith.convertPrefixToPostfix(arr);
-		for(int i = 0; i < arr.length; i++)
-		{
-			test = test + arr[i];
-		}
-		assertEquals("convertPrefixToPostfix; Correct Case", test, "ABC/-AK/L-*");
+		assertArrayEquals("convertPrefixToPostfix; Correct Case", test, arr);
+		// "ABC/-AK/L-*"
+		arr = new String [] { "+", "A", "/", "B", "*", "C", "D" }; // Prefix
+		test = new String [] { "A", "B", "C", "D", "*", "/", "+" }; // Postfix
+		arr = Arith.convertPrefixToPostfix(arr);
+		assertArrayEquals("convertPostfixToPrefix; Plus and Multiplied Case", test, arr);
 	}
 	
 	@Test
@@ -63,13 +84,14 @@ public class ArithTest {
 		String [] arr = {};
 		assertEquals("convertPostfixToPrefix; Empty Case", Arith.convertPostfixToPrefix(arr).toString(), arr.toString());
 		arr = new String [] { "A", "B", "C", "/", "-", "A", "K", "/", "L", "-", "*" };
-		String test = "";
+		String [] test = new String [] {"*", "-", "A", "/", "B", "C", "-", "/", "A", "K", "L"};
 		arr = Arith.convertPostfixToPrefix(arr);
-		for(int i = 0; i < arr.length; i++)
-		{
-			test = test + arr[i];
-		}
-		assertEquals("convertPostfixToPrefix; Correct Case", test, "*-A/BC-/AKL");
+		assertArrayEquals("convertPostfixToPrefix; Correct Case", test, arr);
+		arr = new String [] { "A", "B", "C", "D", "*", "/", "+" }; // Postfix
+		test = new String [] { "+", "A", "/", "B", "*", "C", "D" }; // Prefix
+		arr = Arith.convertPostfixToPrefix(arr);
+		assertArrayEquals("convertPostfixToPrefix; Plus and Multiplied Case", test, arr);
+		
 	}
 	
 	@Test
@@ -77,13 +99,14 @@ public class ArithTest {
 		String [] arr = {};
 		assertEquals("convertPrefixToInfix; Empty Case", Arith.convertPrefixToInfix(arr).toString(), arr.toString());
 		arr = new String [] { "*", "-", "A", "/", "B", "C", "-", "/", "A", "K", "L" };
-		String test = "";
+		String [] test = new String [] { "(", "(", "A", "-", "(", "B", "/", "C", ")", ")", "*", "(", "(", "A", "/", "K", ")", "-", "L", ")", ")" };
 		arr = Arith.convertPrefixToInfix(arr);
-		for(int i = 0; i < arr.length; i++)
-		{
-			test = test + arr[i];
-		}
-		assertEquals("convertPostfixToPrefix; Correct Case", test, "((A-(B/C))*((A/K)-L))");
+		assertArrayEquals("convertPostfixToPrefix; Correct Case", test, arr);
+		//"((A-(B/C))*((A/K)-L))"
+		arr = new String [] { "+", "A", "/", "B", "*", "C", "D" };
+		test = new String [] { "(", "A", "+", "(", "B", "/", "(", "C", "*", "D", ")", ")", ")" };
+		arr = Arith.convertPrefixToInfix(arr);
+		assertArrayEquals("convertPostfixToPrefix; Plus and Multiplied Case", test, arr);
 	}
 	
 	@Test
@@ -91,12 +114,15 @@ public class ArithTest {
 		String [] arr = {};
 		assertEquals("convertPrefixToInfix; Empty Case", Arith.convertPostfixToInfix(arr).toString(), arr.toString());
 		arr = new String [] { "A", "B", "C", "/", "-", "A", "K", "/", "L", "-", "*" };
-		String test = "";
+		String [] test = new String [] { "(", "(", "A", "-", "(", "B", "/", "C", ")", ")", "*", "(", "(", "A", "/", "K", ")", "-", "L", ")", ")" };
 		arr = Arith.convertPostfixToInfix(arr);
-		for(int i = 0; i < arr.length; i++)
-		{
-			test = test + arr[i];
-		}
-		assertEquals("convertPostfixToPrefix; Correct Case", test, "((A-(B/C))*((A/K)-L))");
+		assertArrayEquals("convertPostfixToPrefix; Correct Case", test, arr);
+		// PO: a b c d * / +
+		// IN: (A + (B / (C * D)))
+		arr = new String [] { "A", "B", "C", "D", "*", "/", "+" };
+		test = new String [] { "(", "A", "+", "(", "B", "/", "(", "C", "*", "D", ")", ")", ")" };
+		arr = Arith.convertPostfixToInfix(arr);
+		assertArrayEquals("convertPostfixToPrefix; Plus and Multiplied Case", test, arr);
+		
 	}
 }
